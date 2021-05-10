@@ -18,6 +18,9 @@ In addition to the one meeting that we had scheduled each week after the lecture
 
 \subsection{Stages and tools}
 \subsection{Organization of repositories}
+Our project is making use of a mono repository structure. This was an obvious choice due to the structure of our application. Our application is one single entity i.e. the UI that a user would access is rendered serverside and shares most of it's logic with the existing API. As for our various configuration files, e.g. docker compose for the logging utilities, it makes logical sense that these would be located together with the application that makse use of them.
+\\\\
+Had our application made use of a client- server architecture isntead of a purely serverside one, and argumetn could have been made for seperating the client into a selfcontained repository, though in our scenario it would not make much sense to try and seperate part of the application into it's own repository.
 \subsection{Applied branching strategy}
 In week 2 we discussed what branching strategy we should use. We quickly narrowed the field of possible strategies to two - Git Flow and GitHub Flow, since these were the two strategies most people had experience with within the group. 
 \\\\
