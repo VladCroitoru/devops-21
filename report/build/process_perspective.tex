@@ -35,9 +35,36 @@ By week 7, we decided to change our branching strategy to GitHub Flow due to the
 \subsection{Applied development process and tools}
 % For example, how did you use issues, Kanban boards, etc. to organize open tasks
 As breifly touched upon in \ref{Team organization}, we made use of a Kanban board to keep track of all our tasks at any given point. We treated the overall objectives given for each weeks project work as our user stories, and then proceeded to split these down further into their own product backlog items. The tool that we utiliesed to keep our backlog in is azure backlog.
-\subsection{Monitoring \& logging - Kasper}
+\subsection{Monitoring}
+Our Minitwit application was initially hosted on Microsoft Azure, which included some limited monitoring, like CPU usage, memory usage, and response times. But due to our application were hosted in a Docker container, we weren’t for instance able to get specific metrics on how long time the different endpoints took to execute. This meant that we had to implement custom metrics programmatically.
+\\\\
+We ended up using Prometheus for this purpose. We set up a droplet on Digital Ocean as our Server, where the client reported to. To visualize the data, we had another Digital Ocean droplet with a Grafana client running. This client tapped into the Prometheus server to get the data. The data we visualized were:
+\begin{enumerate}
+    \item CPU usage
+    \item Memory usage
+    \item Number of registered users
+    \item Number of messages (tweets)
+    \item API endpoint execution duration
+    \begin{enumerate}
+        \item Average
+        \item 50th percentile
+        \item 95th percentile
+    \end{enumerate}
+\end{enumerate}
+When we initially deployed our application with custom metrics to Azure, we noticed that we didn’t get any metrics. We later found out that Azure does not allow outbound traffic on the plan we had. To address this issue, we change our cloud provider to Digital Ocean.
 % How do you monitor your systems and what precisely do you monitor?
+\subsection{Logging}
 % What do you log in your systems and how do you aggregate logs?
+We initially choose to implement the ELK-stack (Elasticsearch, Logstash, and Kibana), since it was a solid and proven stack in the industry. But due to unforeseen implications with the ELK-stack and how our application infrastructure was set up, which made the implementation more complicated than we had time for. We then decided to explore what other logging services we could use and ended up with a service called Datadog.
+\\\\
+Datadog works by installing an agent on the server, which listens to stdout from the application. On the application level, we use a Go library called Logrus, which can specify different log levels, i.e. info, debug, warning and error. We for instance log all endpoint requests on info-level, while failed login attempts are logged as a warning since it could indicate compromised users. Application errors, like records in the database not found or when errors are thrown are logged as an error.  Logrus gives us the flexibility to log whatever we want in whatever format since it can take JSON as input. We just need to serialize the data.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{img/logs.png}
+    \caption{Example on logs.}   
+    \label{fig:log_example}
+\end{figure}
+
 \subsection{Security assessment}
 % Brief results of the security assessment.
 \subsection{Scaling and load balancing}
